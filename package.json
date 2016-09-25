@@ -1,8 +1,8 @@
 {
   "name": "ceg",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Express server with couchbase and graphql",
+  "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "babel src -d lib",
@@ -10,10 +10,12 @@
     "start": "node lib"
   },
   "keywords": [],
-  "author": "",
+  "author": "Jose Miguel Navarro <jmn8718@gmail.com>",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.14.0"
+    "express": "^4.14.0",
+    "express-graphql": "^0.5.4",
+    "graphql": "^0.7.0"
   },
   "devDependencies": {
     "babel-cli": "^6.14.0",
