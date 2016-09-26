@@ -11,8 +11,8 @@ const server = http.createServer(app);
 /**
  * Listen on provided port, on all network interfaces.
  */
-
-server.listen(app.get('port'));
+const port = app.get('port');
+server.listen(port);
 server.on('error', (error) => {
   if (error.syscall !== 'listen') {
     throw error;
