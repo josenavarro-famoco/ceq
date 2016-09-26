@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "babel src -d lib",
     "prestart": "npm run build",
-    "start": "ENV=development node lib"
+    "start": "ENV=development PORT=5000 node lib"
   },
   "keywords": [],
   "author": "Jose Miguel Navarro <jmn8718@gmail.com>",
