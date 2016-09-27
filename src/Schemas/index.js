@@ -7,14 +7,23 @@ import {
   GraphQLNonNull
 } from 'graphql';
 
-import Db from '../db';
-import { PersonCb } from '../db/cb';
+// import Db from '../db';
+import {
+  PersonCb,
+  PostCb,
+} from '../db/cb';
 
 const Post = new GraphQLObjectType({
   name: 'Post',
   description: 'Blog post',
   fields () {
     return {
+      id: {
+        type: GraphQLString,
+        resolve (post) {
+          return post._id;
+        }
+      },
       title: {
         type: GraphQLString,
         resolve (post) {
@@ -30,7 +39,7 @@ const Post = new GraphQLObjectType({
       person: {
         type: Person,
         resolve (post) {
-          return post.getPerson();
+          return post.person;
         }
       }
     };
@@ -45,7 +54,6 @@ const Person = new GraphQLObjectType({
       id: {
         type: GraphQLString,
         resolve (person) {
-          console.log('id',person)
           return person._id;
         }
       },
@@ -70,7 +78,16 @@ const Person = new GraphQLObjectType({
       posts: {
         type: new GraphQLList(Post),
         resolve (person) {
-          return person.getPosts();
+          return new Promise((resolve, reject) => {
+            PostCb.find({ person: { _id: person._id }}, (err, data) => {
+              if (err) {
+                console.log(err)
+                reject(err)
+              }
+              console.log(data)
+              resolve(data);
+            });
+          })
         }
       }
     };
@@ -93,7 +110,6 @@ const Query = new GraphQLObjectType({
           }
         },
         resolve (root, args) {
-          // return Db.models.person.findAll({ where: args });
           return new Promise((resolve, reject) => {
             PersonCb.find(args, (err, data) => {
               if (err) {
@@ -108,47 +124,54 @@ const Query = new GraphQLObjectType({
       posts: {
         type: new GraphQLList(Post),
         resolve (root, args) {
-          Db.models.post.findAll({ where: args }).then(data => console.log(data))
-          return Db.models.post.findAll({ where: args });
+          return new Promise((resolve, reject) => {
+            PostCb.find(args, (err, data) => {
+              if (err) {
+                console.log(err)
+                reject(err)
+              }
+              resolve(data);
+            });
+          })
         }
       }
     };
   }
 });
-
-const Mutation = new GraphQLObjectType({
-  name: 'Mutations',
-  description: 'Functions to set stuff',
-  fields () {
-    return {
-      addPerson: {
-        type: Person,
-        args: {
-          firstName: {
-            type: new GraphQLNonNull(GraphQLString)
-          },
-          lastName: {
-            type: new GraphQLNonNull(GraphQLString)
-          },
-          email: {
-            type: new GraphQLNonNull(GraphQLString)
-          }
-        },
-        resolve (source, args) {
-          return Db.models.person.create({
-            firstName: args.firstName,
-            lastName: args.lastName,
-            email: args.email.toLowerCase()
-          });
-        }
-      }
-    };
-  }
-});
+//
+// const Mutation = new GraphQLObjectType({
+//   name: 'Mutations',
+//   description: 'Functions to set stuff',
+//   fields () {
+//     return {
+//       addPerson: {
+//         type: Person,
+//         args: {
+//           firstName: {
+//             type: new GraphQLNonNull(GraphQLString)
+//           },
+//           lastName: {
+//             type: new GraphQLNonNull(GraphQLString)
+//           },
+//           email: {
+//             type: new GraphQLNonNull(GraphQLString)
+//           }
+//         },
+//         resolve (source, args) {
+//           return Db.models.person.create({
+//             firstName: args.firstName,
+//             lastName: args.lastName,
+//             email: args.email.toLowerCase()
+//           });
+//         }
+//       }
+//     };
+//   }
+// });
 
 const Schema = new GraphQLSchema({
   query: Query,
-  mutation: Mutation
+  // mutation: Mutation
 });
 
 export default Schema;
