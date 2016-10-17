@@ -19,8 +19,8 @@ if (process.env.ENV === 'development') {
 }
 
 // parse body params and attache them to req.body
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 app.use(cookieParser());
 app.use(compress());
@@ -32,6 +32,9 @@ app.use(cors());
 const PORT = process.env.PORT || 3000;
 app.set('port', PORT);
 
+import router from './api';
+
+app.use('/api', router);
 app.get('/', (req, res) => res.end('Hello World'));
 
 app.use('/graphql', graphqlHTTP({
