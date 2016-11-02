@@ -9,6 +9,7 @@ ottoman.bucket = usersBucket;
 
 // Build my "schema" from my model files
 require('./schemas/user');
+require('./schemas/place');
 
 // Build the necessary indexes to function
 ottoman.ensureIndices(function(err) {

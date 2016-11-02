@@ -2,8 +2,10 @@ import express from 'express';
 const router = express.Router();
 
 import users from './users';
+import places from './places';
 
 router.use('/users', users);
+router.use('/places', places);
 
 router.get('/', (req, res) => {
   res.json({
