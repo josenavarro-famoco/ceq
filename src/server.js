@@ -34,7 +34,7 @@ app.set('port', PORT);
 
 import router from './api';
 
-app.use('/api', router);
+app.use('/api/v1', router);
 app.get('/', (req, res) => res.end('Hello World'));
 
 app.use('/graphql', graphqlHTTP({

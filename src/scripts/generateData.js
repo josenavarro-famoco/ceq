@@ -1,8 +1,8 @@
 import Faker from 'faker';
 import _ from 'lodash';
 
-import UserModel from '../db/schemas/user';
-import PlaceModel from '../db/schemas/place';
+// import UserModel from '../db/schemas/user';
+import Place from '../db/schemas/place';
 
 // _.times(10, ()=> {
 //   return new Promise((resolve, reject) => {
@@ -27,7 +27,9 @@ _.times(10, ()=> {
     const place = new PlaceModel({
       name: Faker.company.companyName(),
       address: Faker.address.streetAddress(),
-      location: `${Faker.address.latitude()}, ${Faker.address.longitude()}`,
+      location: {
+        coordinates: [ parseFloat(Faker.address.latitude()), parseFloat(Faker.address.longitude())],
+      }
     });
     place.save(err => {
       if (err) {

@@ -1,10 +1,10 @@
 import express from 'express';
 const router = express.Router();
 
-import PlaceModel from '../db/schemas/place';
+import Place, { findPlaceByBbox } from '../db/schemas/place';
 
 router.get('/', (req, res) => {
-  PlaceModel.find({}, function(error, result) {
+  Place.find({}, function(error, result) {
     if(error) {
         console.log("An error happened -> " + JSON.stringify(error));
         res.json(error);
@@ -14,10 +14,21 @@ router.get('/', (req, res) => {
   });
 });
 
+router.get('/bbox', (req, res) => {
+  const queryParams = req.query;
+  if (queryParams.coordinates) {
+    findPlaceByBbox(queryParams.coordinates, data => {
+      res.json(data);
+    });
+  } else {
+    res.json({ reason: 'not coordinates provided'});
+  }
+});
+
 router.post('/', (req, res) => {
   const body = req.body;
   console.log(body);
-  const place = new PlaceModel(body);
+  const place = new Place(body);
   user.save((error, data) => {
     if (error) {
       res.json(error);
