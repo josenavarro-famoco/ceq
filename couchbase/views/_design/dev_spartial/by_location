@@ -1,0 +1,9 @@
+function (doc) {
+  if (doc.location && doc.location.coordinates) {
+    var location = {
+      type: 'Point',
+      coordinates: doc.location.coordinates
+    };
+    emit(location, doc._id);
+  }
+}
